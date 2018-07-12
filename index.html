@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <title>World Cup Tic Tac Toe</title>
+    <link rel="icon"
+      type="image/png"
+      href="/franceBall.png">
+  </head>
+  <script
+  src="https://code.jquery.com/jquery-3.3.1.js"
+  integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+  crossorigin="anonymous"></script>
+  <body>
+    <audio autoplay>
+      <source src="whistle.mp3" type="audio/mpeg">
+    </audio>
+
+    <span class='turn' id="turn">World Cup 2018 Finals Tic Tac Toe</span>
+    <div class="croatia slide-in">
+    </div>
+    <div class="france slide-in">
+    </div>
+    <div id="tictactoe"></div>
+
+
+  </body>
+  <style media="screen">
+    body {
+      background: url("https://roadtovrlive-5ea0.kxcdn.com/wp-content/uploads/2018/05/fifa-world-cup.jpg") black;
+      background-size: cover;
+      overflow: hidden;
+    }
+
+    .croatia {
+      transform: translateX(-200%);
+      -webkit-transform: translateX(-200%);
+      opacity: 0.2;
+      background: url("croatia.png");
+      background-size: 60em 36em;
+      background-repeat: no-repeat;
+      top: 50%;
+      left: 50%;
+      width:60em;
+      height:36em;
+      margin-top: -18em; /*set to a negative number 1/2 of your height*/
+      margin-left: -30em; /*set to a negative number 1/2 of your width*/
+      /* border: 1px solid #ccc; */
+      background-color: #f3f3f3;
+      position:fixed;
+      z-index: 1;
+    }
+    .france {
+      transform: translateX(200%);
+      -webkit-transform: translateX(200%);
+      background: url("france.png");
+      background-size: 60em 36em;
+      background-repeat: no-repeat;
+      top: 50%;
+      left: 50%;
+      width:60em;
+      height:36em;
+      margin-top: -18em; /*set to a negative number 1/2 of your height*/
+      margin-left: -30em; /*set to a negative number 1/2 of your width*/
+      background-color: #f3f3f3;
+      position:fixed;
+    }
+
+    table {
+  	border-collapse:collapse;
+    top: 50%;
+    left: 50%;
+    width:60em;
+    height:36em;
+    margin-top: -18em; /*set to a negative number 1/2 of your height*/
+    margin-left: -30em; /*set to a negative number 1/2 of your width*/
+    position:fixed;
+    z-index: 2;
+    }
+
+    td {
+    	border: 3px solid black;
+    	font-size:80px;
+      font-family: sans-serif;
+    	color:black;
+    }
+    #turn {
+        display: table;
+        margin: auto;
+        background-color: black;
+        margin-top: 50px;
+    font-size: 3rem;
+    color: white;
+    font-family: sans-serif;
+    }
+
+    .slide-in {
+        animation: slide-in 2s forwards;
+        -webkit-animation: slide-in 2s forwards;
+      }
+
+    @keyframes slide-in {
+        100% { transform: translateX(0%); }
+    }
+
+    @-webkit-keyframes slide-in {
+        100% { -webkit-transform: translateX(0%); }
+    }
+
+</style>
+
+</html>
+<script type="text/javascript">
+
+	var N_SIZE = 3,
+		EMPTY = "&nbsp;",
+		boxes = [],
+		turn = "C",
+		score,
+		moves;
+
+	function init() {
+		var board = document.createElement('table');
+    board.setAttribute("border", 1);
+    board.setAttribute("cellspacing", 0);
+
+		var identifier = 1;
+		for (var i = 0; i < N_SIZE; i++) {
+			var row = document.createElement('tr');
+			board.appendChild(row);
+			for (var j = 0; j < N_SIZE; j++) {
+        var cell = document.createElement('td');
+        cell.setAttribute('height', 120);
+        cell.setAttribute('width', 120);
+        cell.setAttribute('align', 'center');
+        cell.setAttribute('valign', 'center');
+				cell.classList.add('col' + j,'row' + i);
+				if (i == j) {
+					cell.classList.add('diagonal0');
+				}
+				if (j == N_SIZE - i - 1) {
+					cell.classList.add('diagonal1');
+				}
+				cell.identifier = identifier;
+				cell.addEventListener("click", set);
+				row.appendChild(cell);
+				boxes.push(cell);
+				identifier += identifier;
+			}
+		}
+
+		document.getElementById("tictactoe").appendChild(board);
+		startNewGame();
+	}
+
+	/*
+	 * New game
+	 */
+	function startNewGame() {
+		score = {
+			"X": 0,
+			"O": 0
+		};
+		moves = 0;
+		turn = "C";
+		boxes.forEach(function (square) {
+			square.innerHTML = EMPTY;
+		});
+	}
+
+	/*
+	 * Check if a win or not
+	 */
+	function win(clicked) {
+		// Get all cell classes
+		var memberOf = clicked.className.split(/\s+/);
+		for (var i = 0; i < memberOf.length; i++) {
+			var testClass = '.' + memberOf[i];
+      var items = contains('#tictactoe ' + testClass, turn);
+			// winning condition: turn == N_SIZE
+			if (items.length == N_SIZE) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+function contains(selector, text) {
+  var elements = document.querySelectorAll(selector);
+  return [].filter.call(elements, function(element){
+    return RegExp(text).test(element.textContent);
+  });
+}
+
+	/*
+	 * Sets clicked square and also updates the turn.
+	 */
+	function set() {
+		if (this.innerHTML !== EMPTY) {
+			return;
+		}
+		this.innerHTML = turn;
+		moves += 1;
+		score[turn] += this.identifier;
+		if (win(this)) {
+			alert('Winner: Player ' + turn);
+			startNewGame();
+		} else if (moves === N_SIZE * N_SIZE) {
+			alert("Draw");
+			startNewGame();
+		} else {
+			turn = turn === "C" ? "F" : "C";
+			document.getElementById('turn').textContent = turn + '\'s turn';
+		}
+	}
+
+	init();
+</script>
