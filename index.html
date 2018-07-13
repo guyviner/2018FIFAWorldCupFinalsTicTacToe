@@ -261,7 +261,11 @@ function contains(selector, text) {
 		if (this.innerHTML !== EMPTY) {
 			return;
 		}
-		this.innerHTML = turn;
+    let croatia = new Image(100, 100);
+    croatia.src = 'croatiaBall.png'
+    let france = new Image(100, 100);
+    france.src = 'franceBall2.png'
+    this.appendChild(turn = turn === "CROATIA" ? croatia : france);
 		moves += 1;
 		score[turn] += this.identifier;
 		if (win(this)) {
