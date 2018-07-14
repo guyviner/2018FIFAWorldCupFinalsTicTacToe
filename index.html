@@ -82,18 +82,19 @@
 
     td {
     	border: 3px solid black;
-    	font-size:26px;
+    	font-size:0px;
       font-family: sans-serif;
     	color:black;
     }
     #turn {
-        display: table;
+        display: block;
         margin: auto;
         background-color: black;
-        margin-top: 50px;
+        margin-top: 2%;
     font-size: 3rem;
     color: white;
     font-family: sans-serif;
+    text-align: center;
     /* box-shadow: 1px 1px #ccc; */
     }
 
@@ -150,15 +151,17 @@
           -webkit-hyphens: auto;
           hyphens: auto;
 
-            font-size: 20px;
+            font-size: 0px;
           }
 
-          td {
-            transform:
+          td img {
+            width: 100%;
+            height: 100%;
+            /* transform: */
               /* Magic Numbers */
               /* translate(25px, 51px) */
               /* 45 is really 360 - 45 */
-              rotate(315deg);
+              /* rotate(315deg); */
             /* width: 30px; */
           }
           td {
@@ -265,7 +268,8 @@ function contains(selector, text) {
     croatia.src = 'croatiaBall.png'
     let france = new Image(100, 100);
     france.src = 'franceBall2.png'
-    this.appendChild(turn = turn === "CROATIA" ? croatia : france);
+    this.innerHTML = turn;
+    this.appendChild(turn === "CROATIA" ? croatia : france)
 		moves += 1;
 		score[turn] += this.identifier;
 		if (win(this)) {
